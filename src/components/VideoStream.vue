@@ -34,18 +34,31 @@ export default {
   methods: {
     onMessage(event) {
 
-      const message = event.data;
-      const data = new Uint8Array(message);
-      const frame = new Blob([data], { type: 'application/octet-binary' });
-      const url = URL.createObjectURL(frame);
-      // console.log(url)
+      const base64Image = event.data;
       const img = new Image();
-      img.src = url;
+      img.src = 'data:image/jpeg;base64,' + base64Image;
       img.onload = () => {
-        console.log('loaded')
-        this.context.drawImage(img, 0, 0, 640, 480);
-        URL.revokeObjectURL(url);
+        const canvas = this.$refs.canvas;
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        canvas.style.width = '100%';
       };
+
+      // console.log('onMessage', event.data);
+      // const message = event.data;
+      // const data = new Uint8Array(message);
+      // const frame = new Blob([data], { type: 'application/octet-binary' });
+      // const url = URL.createObjectURL(frame);
+      // console.log(url)
+      // const img = new Image();
+      // img.src = url;
+      // img.onload = () => {
+      //   console.log('loaded')
+      //   this.context.drawImage(img, 0, 0, 640, 480);
+      //   URL.revokeObjectURL(url);
+      // };
     },
   },
   watch:{
